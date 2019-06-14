@@ -1,0 +1,167 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Apr 29 13:59:31 2019
+
+@author: seiic
+
+v0.5: 出力ファイル名を日本語に変更した
+
+"""
+import pandas as pd
+
+touroku = '団体登録する'
+
+
+shumoku_10m = [
+    'AR60',
+    'AR60W',
+    'ARMIX'
+]
+
+shumoku_50m = [
+    'FR3x40',
+    'FR60PR',
+    'R3x40',
+    'R60PR'
+]
+
+# 10mと50m両方の種目名
+shumoku = shumoku_10m + shumoku_50m
+
+shumoku_10m =  [
+    'AR60PR団体',
+    'AR60PR個人'
+]
+
+shumoku_dk = [
+   'FR3x40D',
+   'FR3x40',
+   'FR60PRD',
+   'FR60PR',
+   'AR60D',
+   'AR60',
+   'R3x40D',
+   'R3x40',
+   'R60PRD',
+   'R60PR',
+   'AR60WD',
+   'AR60W',
+   'ARMIX'
+]
+
+# 団体登録のある種目
+dantai_list = [
+    'FR3x40団体登録',
+    'FR60PR団体登録',
+    'AR60団体登録',
+    'R3x40団体登録',
+    'R60PR団体登録',
+    'AR60W団体登録'
+]
+
+# SB = 7000Yen, AR = 3000Yen
+price = {
+    'FR3x40': 7000,
+    'FR60PR': 7000,
+    'AR60': 3000,
+    'R3x40': 7000,
+    'R60PR': 7000,
+    'AR60W': 3000,
+    'ARMIX': 3000
+}
+
+
+def sankahi_calc(shashu, team):
+    """ 
+    チームの射手データと団体登録データから、チームの参加費を計算    
+    引数　shashu = チームの射手リスト team = チームの団体登録
+    返値　pandasのSeries
+    """
+    team_name = team['チーム名']
+    print(team_name)
+
+    ryoukin = pd.DataFrame()
+    ryoukin['チーム名'] = team_name
+
+    # 個人エントリーと団体エントリーそれぞれの人数をカウントして計算
+    for s in shumoku:
+        kojin = shashu[s] == '個人'
+        dantai = shashu[s] == '団体'
+
+        # それぞれの人数に競技ごとの個人エントリーフィーを掛ける
+        ryoukin[s + '団体'] = dantai.sum() * price[s]
+        ryoukin[s] = kojin.sum() * price[s]
+
+    # 団体登録費の計算
+    for s in dantai_list:
+        # print(s)
+        ryoukin[s] = 7000 if team[s].values == '団体登録する' else 0
+
+    ryoukin['合計'] = ryoukin.sum(axis = 1)
+    return ryoukin
+
+def shashu_10m(path):
+    """
+    10m伏射の集計をする
+    """
+    import os
+    import glob
+
+    # 10m射手のファイルは別フォルダに置く
+    DATAPATH = path
+    DATAGLOB = DATAPATH + "*.xlsx"
+    OUTPUTPATH = "../output/"
+    datalist = glob.glob(DATAGLOB)
+
+    shashu_list_10m = pd.DataFrame([])
+    for file in datalist:
+        print(file)
+        shashu_data_10m = pd.read_excel(file, 
+                                    sheet_name = '申込フォーム', 
+                                    dtype='object')
+        #print(shashu_data_10m)
+
+        # リストから空欄と入力例を削除
+        shashu_data_10m = shashu_data_10m.dropna(subset = ['氏名']).drop(0)
+        #print(shashu_data_10m)
+
+        # 番号も必要ないので削除
+        del shashu_data_10m['番号']
+        #print(shashu_data_10m)
+
+        # 日ラIDからいらない文字を消去
+        #shashu_data_10m = shashu_data_10m['日ラID'].str.replace('_', '').replace('-','').replace(' ','')
+        #print(shashu_data_10m)
+
+        shashu_list_10m = pd.concat([shashu_data_10m, shashu_list_10m], sort = False, ignore_index = True)
+
+    return shashu_list_10m
+
+
+def shumoku_shashu_list(shashu_list, output = "../output/"):
+    """
+    種目別射手リストを作成し、ファイルに保存する
+    """
+
+    # Pandas のwriterを使って、種目別にシートを作成する
+    with pd.ExcelWriter(output + '種目別射手リスト.xlsx') as writer:
+        for s in shumoku:
+            cols = ['氏名', 'ふりがな', 'チーム名']
+            if s == 'ARMIX': # ARMIXの実施日は１つなので、希望日はなし
+                cols += ['ARMIX', 'ARMIXチーム名', '特記事項_x']
+            else:
+                cols += [s, s + '希望日', '特記事項_x']
+            s_list = shashu_list[cols].dropna(subset=[s])
+            s_list.reset_index(inplace = True)
+            s_list.to_excel(writer, sheet_name = s)
+
+        for s in shumoku_10m:
+            cols = ['氏名', 'ふりがな', 'チーム名', s, s + '希望日', '特記事項_y']
+            s_list = shashu_list[cols].dropna(subset=[s])
+            s_list.reset_index(inplace = True)
+            s_list.to_excel(writer, sheet_name = s)
+
+# このファイルはモジュールなので直接実行はしません
+if __name__ == '__main__':
+    print("クラブ戦エントリーシート　モジュール")
+    print("import clubfunc")
