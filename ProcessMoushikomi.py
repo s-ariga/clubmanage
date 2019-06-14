@@ -70,12 +70,7 @@ if __name__=='__main__':
 
      
     shashu_list = pd.merge(shashu_list, shashu_10m_list, how='outer', on=['氏名', 'ふりがな', '日ラID', 'チーム名'])
-#    del shashu_list['ふりがな_y']
-#    del shashu_list['日ラID_y']
-#    del shashu_list['チーム名_y']
-#    shashu_list = shashu_list.rename(columns={'ふりがな_x': 'ふりがな', '日ラID_x': '日ラID', 'チーム名_x': 'チーム名'})
-#    print(shashu_list)
-#    shashu_list.to_excel('../output/' + 'temp.xlsx')
+    #shashu_list = shashu_list.rename(columns={'ふりがな_x': 'ふりがな', '日ラID_x': '日ラID', 'チーム名_x': 'チーム名'})
     # 種目ごとの射手リスト作成
     cf.shumoku_shashu_list(shashu_list)
 
@@ -83,4 +78,3 @@ if __name__=='__main__':
     shashu_list.to_excel(OUTPUTPATH + '全射手一覧.xlsx')
     team_list.to_excel(OUTPUTPATH + '全チーム一覧.xlsx')
     sankahi_list.to_excel(OUTPUTPATH + '全チーム参加費集計.xlsx')
-

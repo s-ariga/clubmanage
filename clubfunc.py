@@ -74,8 +74,18 @@ price = {
 def sankahi_calc(shashu, team):
     """ 
     チームの射手データと団体登録データから、チームの参加費を計算    
-    引数　shashu = チームの射手リスト team = チームの団体登録
-    返値　pandasのSeries
+    
+    Parameters
+    -----------------------
+    shashu : pandas.DataFrame
+        チームの射手リスト
+    team : pandas.DataFrame
+         チームの団体登録
+
+    Returns
+    ----------------------
+    ryokin : pandas.Series
+        チームの料金
     """
     team_name = team['チーム名']
     print(team_name)
@@ -103,14 +113,24 @@ def sankahi_calc(shashu, team):
 def shashu_10m(path):
     """
     10m伏射の集計をする
+
+    Parameters
+    -----------------------
+    path : string
+        データ置き場のパス
+
+    Returns
+    -----------------------
+    shashu_list_10m : pandas.DataFrame
+        10m射手のリスト in DataFarme
     """
+
     import os
     import glob
 
     # 10m射手のファイルは別フォルダに置く
     DATAPATH = path
     DATAGLOB = DATAPATH + "*.xlsx"
-    OUTPUTPATH = "../output/"
     datalist = glob.glob(DATAGLOB)
 
     shashu_list_10m = pd.DataFrame([])
@@ -141,6 +161,13 @@ def shashu_10m(path):
 def shumoku_shashu_list(shashu_list, output = "../output/"):
     """
     種目別射手リストを作成し、ファイルに保存する
+
+    Parameters
+    ---------------------
+    shashu_list : pandas.DataFrame
+        射手のリスト in DataFrame
+    output : string
+        データ出力フォルダのパス
     """
 
     # Pandas のwriterを使って、種目別にシートを作成する
