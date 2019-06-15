@@ -11,7 +11,6 @@ import pandas as pd
 
 touroku = '団体登録する'
 
-
 shumoku_10m = [
     'AR60',
     'AR60W',
@@ -67,7 +66,9 @@ price = {
     'R3x40': 7000,
     'R60PR': 7000,
     'AR60W': 3000,
-    'ARMIX': 3000
+    'ARMIX': 3000,
+    'AR60PR': 3000,
+    '団体登録': 7000
 }
 
 
@@ -104,11 +105,11 @@ def sankahi_calc(shashu, team):
 
     # 団体登録費の計算
     for s in dantai_list:
-        # print(s)
-        ryoukin[s] = 7000 if team[s].values == '団体登録する' else 0
+        ryoukin[s] = price['団体登録'] if team[s].values == '団体登録する' else 0
 
     ryoukin['合計'] = ryoukin.sum(axis = 1)
     return ryoukin
+
 
 def shashu_10m(path):
     """
@@ -139,23 +140,46 @@ def shashu_10m(path):
         shashu_data_10m = pd.read_excel(file, 
                                     sheet_name = '申込フォーム', 
                                     dtype='object')
-        #print(shashu_data_10m)
-
         # リストから空欄と入力例を削除
         shashu_data_10m = shashu_data_10m.dropna(subset = ['氏名']).drop(0)
-        #print(shashu_data_10m)
-
         # 番号も必要ないので削除
         del shashu_data_10m['番号']
-        #print(shashu_data_10m)
-
-        # 日ラIDからいらない文字を消去
-        #shashu_data_10m = shashu_data_10m['日ラID'].str.replace('_', '').replace('-','').replace(' ','')
-        #print(shashu_data_10m)
-
         shashu_list_10m = pd.concat([shashu_data_10m, shashu_list_10m], sort = False, ignore_index = True)
 
     return shashu_list_10m
+
+
+def sankahi_10m_calc(sankahi, shashu_list):
+    """
+    10m伏射の参加費を計算し、参加費リストに追加
+
+    Parameters
+    ----------------------
+    sankahi : pandas.DataFrame
+        参加費リスト
+    shashu_list : pandas.DataFrame
+        10m伏射射手リスト
+
+    Returns
+    -----------------------
+    sankahi : pandas.DataFrame
+        参加費リスト（引数で受けたものを返す）
+    """
+    sankahi_10m = pd.DataFrame(columns=['チーム名', 'AR60PR'])
+
+    # チーム名でGroupbyした射手リストを作成
+    groupby_10m = shashu_list.groupby('チーム名')
+    for team, team_list in groupby_10m:
+        # リストのカウントがエントリー射手の人数。10m登録者数リストに追加していく
+        entry_count = team_list.count()['氏名']
+        print('AR伏射 チーム {0} エントリー {1}人'.format(team, entry_count))
+        sankahi_10m = sankahi_10m.append({'チーム名': team, 'AR60PR': entry_count*price['AR60PR']}, ignore_index=True)
+
+    # 参加費リストに上で作った10mのリストをチーム名でマージ
+    print(sankahi_10m)
+    sankahi = sankahi.merge(sankahi_10m, how='outer', on=['チーム名'])
+
+    return sankahi
 
 
 def shumoku_shashu_list(shashu_list, output = "../output/"):

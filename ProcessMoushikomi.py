@@ -40,11 +40,7 @@ if __name__=='__main__':
         shashu_data = shashu_data.dropna(subset = ['氏名']).drop(0)
         # "番号"も必要ないので削除
         del shashu_data['番号']
-        # 日ラIDに'-', '_'を含めている場合があるので、replace
-        #shashu_data['日ラID'] = shashu_data['日ラID'].str.replace('_', '')
-        #shashu_data['日ラID'] = shashu_data['日ラID'].str.replace('-', '')
-        #shashu_data['日ラID'] = shashu_data['日ラID'].str.replace(' ', '')
-        
+
         # チーム名を最初の射手のチーム名[0, 5]から取得
         team_name = shashu_data.iloc[0, 5]
         # チームのデータを登録リストに追加
@@ -59,16 +55,20 @@ if __name__=='__main__':
         team_list = pd.concat([team_list, team_data], sort = False,
                               ignore_index = True)
         # チームの参加費を計算して参加費リストに追加
-    sankahi_list = pd.concat([cf.sankahi_calc(shashu = shashu_data, team = team_data), sankahi_list], sort = False, ignore_index = True)
+        sankahi_list = pd.concat([cf.sankahi_calc(shashu = shashu_data, team = team_data), sankahi_list], sort = False, ignore_index = True)
                    
     # 10m競技のリスト読み込み
     shashu_10m_list = cf.shashu_10m(path = '../data10mp60/')
+    # 10m伏射の参加費を計算
+    sankahi_list = cf.sankahi_10m_calc(sankahi_list, shashu_10m_list)
+    sankahi_list = sankahi_list.fillna(0)
+    sankahi_list['総合計'] = sankahi_list['合計'] + sankahi_list['AR60PR']
+    sankahi_list['振込日'] = ''
+
     # 10m伏射のリストを保存
     shashu_10m_list.to_excel(OUTPUTPATH + '10m伏射射手.xlsx')
 
-    # 10mデータ側の要らないカラムを削除
-
-     
+    # 10m伏射とその他競技のデータをマージ
     shashu_list = pd.merge(shashu_list, shashu_10m_list, how='outer', on=['氏名', 'ふりがな', '日ラID', 'チーム名'])
     #shashu_list = shashu_list.rename(columns={'ふりがな_x': 'ふりがな', '日ラID_x': '日ラID', 'チーム名_x': 'チーム名'})
     # 種目ごとの射手リスト作成
