@@ -1,4 +1,5 @@
 # いらないファイルリスト
 *.exe
 __pycache__/
+activate.bat
 *~

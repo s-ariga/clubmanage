@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
+"""
+各チームのクラブ戦エントリーを集計するスクリプト
+
+@s_ariga 2019
+
+"""
 import os
 import glob
 import pandas as pd
 import numpy as np
-
-# 使う場合、DBはSQlite3で
-import sqlite3
-#from sqlite3 import Error
 
 import clubfunc as cf
 
@@ -18,8 +20,6 @@ OUTPUTPATH = "../output/"
 if __name__=='__main__':
     # Excelファイルを探す
     datalist = glob.glob(DATAGLOB)
-    #conn= sqlite3.connect(DBPATH)
-    #cur = conn.cursor()
 
     team_list = pd.DataFrame([])
     shashu_list = pd.DataFrame([])
@@ -62,6 +62,7 @@ if __name__=='__main__':
     # 10m伏射の参加費を計算
     sankahi_list = cf.sankahi_10m_calc(sankahi_list, shashu_10m_list)
     sankahi_list = sankahi_list.fillna(0)
+    # 他の競技の参加費合計にAR60PRの参加費を加算
     sankahi_list['総合計'] = sankahi_list['合計'] + sankahi_list['AR60PR']
     sankahi_list['振込日'] = ''
 
@@ -69,8 +70,13 @@ if __name__=='__main__':
     shashu_10m_list.to_excel(OUTPUTPATH + '10m伏射射手.xlsx')
 
     # 10m伏射とその他競技のデータをマージ
+    # その前に、'日ラID'の列をstrにキャスト。何故かint型が混じるので
+    shashu_list['日ラID'] = shashu_list['日ラID'].astype(str)
+    shashu_10m_list['日ラID'] = shashu_10m_list['日ラID'].astype(str)
+
     shashu_list = pd.merge(shashu_list, shashu_10m_list, how='outer', on=['氏名', 'ふりがな', '日ラID', 'チーム名'])
-    #shashu_list = shashu_list.rename(columns={'ふりがな_x': 'ふりがな', '日ラID_x': '日ラID', 'チーム名_x': 'チーム名'})
+
+
     # 種目ごとの射手リスト作成
     cf.shumoku_shashu_list(shashu_list)
 

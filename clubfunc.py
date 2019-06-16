@@ -58,7 +58,8 @@ dantai_list = [
     'AR60W団体登録'
 ]
 
-# SB = 7000Yen, AR = 3000Yen
+# SB = 7,000 Yen, AR = 3,000 Yen
+# 団体登録 = 6000 Yen
 price = {
     'FR3x40': 7000,
     'FR60PR': 7000,
@@ -68,7 +69,7 @@ price = {
     'AR60W': 3000,
     'ARMIX': 3000,
     'AR60PR': 3000,
-    '団体登録': 7000
+    '団体登録': 6000 
 }
 
 
@@ -89,7 +90,6 @@ def sankahi_calc(shashu, team):
         チームの料金
     """
     team_name = team['チーム名']
-    print(team_name)
 
     ryoukin = pd.DataFrame()
     ryoukin['チーム名'] = team_name
