@@ -19,7 +19,6 @@ OUTPUT_FILE = OUTPUT_PATH + "クラブ代表者リスト.xlsx"
 '''
 2019年クラブ登録ファイル(Excel) sheet_name(クラブ情報)
 pandasで読んだときのフォーマット
-
   Unnamed: 0                クラブ登録者名簿
 0       西暦年度                  string
 1        提出日      date
@@ -46,20 +45,16 @@ def DaihyoList():
         team_data.rename(columns={'クラブ登録者名簿':n},
                          inplace=True)
         line = team_data.iloc[[2,3,4,5],[1]].T
-        print(line)
         daihyo_name = str(line.iat[0, 1])
         #print(daihyo_name)
         team_member.dropna(subset=['姓'], inplace=True)
         for index, member in team_member.iterrows():
             sei = str(member['姓'])
             mei = str(member['名'])
-            #print(str(member['姓']) + str(member['名']))
             pattern = sei + '\s*' + mei
-            print(pattern)
-            print(daihyo_name)
             repattern = re.compile(pattern)
             result = repattern.match(daihyo_name)
-            print(pattern + " " + daihyo_name + " " + str(result))
+            #print(pattern + " " + daihyo_name + " " + str(result))
             if result:
                 line['郵便番号'] = str(member['郵便番号'])
                 line['現住所'] = str(member['現住所'])
