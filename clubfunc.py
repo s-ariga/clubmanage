@@ -212,6 +212,8 @@ def shumoku_shashu_list(shashu_list, output = "../output/"):
             s_list.reset_index(inplace = True)
             s_list.to_excel(writer, sheet_name = s)
 
+
+
 # このファイルはモジュールなので直接実行はしません
 if __name__ == '__main__':
     print("クラブ戦エントリーシート　モジュール")
