@@ -3,12 +3,10 @@
 '''
 各チームの代表者リストを作成する
 '''
-
 import os
 import glob
 import re
 import pandas as pd
-
 import clubfunc as cf
 
 DATA_PATH = "../dataclub/"
@@ -32,21 +30,23 @@ No.	姓	名	ふりがな	性別	日ラ会員ID	生年月日	郵便番号	都道�
 
 '''
 
+
 def DaihyoList():
     data_list = glob.glob(DATA_GLOB)
     daihyo_list = pd.DataFrame([])
-    
     # クラブ登録ファイルから代表リスト作成する
     for n, file in enumerate(data_list):
         print(file)
-        team_data = pd.read_excel(file, sheet_name='クラブ情報',dtype='object')
-        team_member = pd.read_excel(file, sheet_name='メンバー情報',dtype='object')
-        
-        team_data.rename(columns={'クラブ登録者名簿':n},
+        team_data = pd.read_excel(file,
+                                  sheet_name='クラブ情報',
+                                  dtype='object')
+        team_member = pd.read_excel(file,
+                                    sheet_name='メンバー情報',
+                                    dtype='object')
+        team_data.rename(columns={'クラブ登録者名簿': n},
                          inplace=True)
-        line = team_data.iloc[[2,3,4,5],[1]].T
+        line = team_data.iloc[[2, 3, 4, 5], [1]].T
         daihyo_name = str(line.iat[0, 1])
-        #print(daihyo_name)
         team_member.dropna(subset=['姓'], inplace=True)
         for index, member in team_member.iterrows():
             sei = str(member['姓'])
@@ -54,21 +54,18 @@ def DaihyoList():
             pattern = sei + '\s*' + mei
             repattern = re.compile(pattern)
             result = repattern.match(daihyo_name)
-            #print(pattern + " " + daihyo_name + " " + str(result))
             if result:
                 line['郵便番号'] = str(member['郵便番号'])
                 line['現住所'] = str(member['現住所'])
         daihyo_list = pd.concat([daihyo_list, line])
-
     # 出力の整形
-    daihyo_list.rename(columns={2:'クラブ名',
-                                3:'代表者名',
-                                4:'email',
-                                5:'Tel'},
-                       
+    daihyo_list.rename(columns={2: 'クラブ名',
+                                3: '代表者名',
+                                4: 'email',
+                                5: 'Tel'},
                        inplace=True)
     daihyo_list.to_excel(OUTPUT_FILE)
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     DaihyoList()

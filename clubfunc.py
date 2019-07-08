@@ -27,7 +27,7 @@ shumoku_50m = [
 # 10mと50m両方の種目名
 shumoku = shumoku_10m + shumoku_50m
 
-shumoku_10m =  [
+shumoku_10m = [
     'AR60PR団体',
     'AR60PR個人'
 ]
@@ -69,14 +69,14 @@ price = {
     'AR60W': 3000,
     'ARMIX': 3000,
     'AR60PR': 3000,
-    '団体登録': 6000 
+    '団体登録': 6000
 }
 
 
 def sankahi_calc(shashu, team):
-    """ 
-    チームの射手データと団体登録データから、チームの参加費を計算    
-    
+    """
+    チームの射手データと団体登録データから、チームの参加費を計算
+
     Parameters
     -----------------------
     shashu : pandas.DataFrame
@@ -98,16 +98,13 @@ def sankahi_calc(shashu, team):
     for s in shumoku:
         kojin = shashu[s] == '個人'
         dantai = shashu[s] == '団体'
-
         # それぞれの人数に競技ごとの個人エントリーフィーを掛ける
         ryoukin[s + '団体'] = dantai.sum() * price[s]
         ryoukin[s] = kojin.sum() * price[s]
-
     # 団体登録費の計算
     for s in dantai_list:
         ryoukin[s] = price['団体登録'] if team[s].values == '団体登録する' else 0
-
-    ryoukin['合計'] = ryoukin.sum(axis = 1)
+    ryoukin['合計'] = ryoukin.sum(axis=1)
     return ryoukin
 
 
@@ -133,19 +130,19 @@ def shashu_10m(path):
     DATAPATH = path
     DATAGLOB = DATAPATH + "*.xlsx"
     datalist = glob.glob(DATAGLOB)
-
     shashu_list_10m = pd.DataFrame([])
     for file in datalist:
         print(file)
-        shashu_data_10m = pd.read_excel(file, 
-                                    sheet_name = '申込フォーム', 
-                                    dtype='object')
+        shashu_data_10m = pd.read_excel(file,
+                                        sheet_name='申込フォーム',
+                                        dtype='object')
         # リストから空欄と入力例を削除
-        shashu_data_10m = shashu_data_10m.dropna(subset = ['氏名']).drop(0)
+        shashu_data_10m = shashu_data_10m.dropna(subset=['氏名']).drop(0)
         # 番号も必要ないので削除
         del shashu_data_10m['番号']
-        shashu_list_10m = pd.concat([shashu_data_10m, shashu_list_10m], sort = False, ignore_index = True)
-
+        shashu_list_10m = pd.concat([shashu_data_10m, shashu_list_10m],
+                                    sort=False,
+                                    ignore_index=True)
     return shashu_list_10m
 
 
@@ -166,23 +163,24 @@ def sankahi_10m_calc(sankahi, shashu_list):
         参加費リスト（引数で受けたものを返す）
     """
     sankahi_10m = pd.DataFrame(columns=['チーム名', 'AR60PR'])
-
     # チーム名でGroupbyした射手リストを作成
     groupby_10m = shashu_list.groupby('チーム名')
     for team, team_list in groupby_10m:
         # リストのカウントがエントリー射手の人数。10m登録者数リストに追加していく
         entry_count = team_list.count()['氏名']
         print('AR伏射 チーム {0} エントリー {1}人'.format(team, entry_count))
-        sankahi_10m = sankahi_10m.append({'チーム名': team, 'AR60PR': entry_count*price['AR60PR']}, ignore_index=True)
-
+        sankahi_10m = sankahi_10m.append({
+            'チーム名': team,
+            'AR60PR':
+            entry_count*price['AR60PR']
+        }, ignore_index=True)
     # 参加費リストに上で作った10mのリストをチーム名でマージ
     print(sankahi_10m)
     sankahi = sankahi.merge(sankahi_10m, how='outer', on=['チーム名'])
-
     return sankahi
 
 
-def shumoku_shashu_list(shashu_list, output = "../output/"):
+def shumoku_shashu_list(shashu_list, output="../output/"):
     """
     種目別射手リストを作成し、ファイルに保存する
 
@@ -198,20 +196,20 @@ def shumoku_shashu_list(shashu_list, output = "../output/"):
     with pd.ExcelWriter(output + '種目別射手リスト.xlsx') as writer:
         for s in shumoku:
             cols = ['氏名', 'ふりがな', 'チーム名']
-            if s == 'ARMIX': # ARMIXの実施日は１つなので、希望日はなし
+            # ARMIXの実施日は１つなので、希望日はなし
+            if s == 'ARMIX':
                 cols += ['ARMIX', 'ARMIXチーム名', '特記事項_x']
             else:
                 cols += [s, s + '希望日', '特記事項_x']
             s_list = shashu_list[cols].dropna(subset=[s])
-            s_list.reset_index(inplace = True)
-            s_list.to_excel(writer, sheet_name = s)
+            s_list.reset_index(inplace=True)
+            s_list.to_excel(writer, sheet_name=s)
 
         for s in shumoku_10m:
             cols = ['氏名', 'ふりがな', 'チーム名', s, s + '希望日', '特記事項_y']
             s_list = shashu_list[cols].dropna(subset=[s])
-            s_list.reset_index(inplace = True)
-            s_list.to_excel(writer, sheet_name = s)
-
+            s_list.reset_index(inplace=True)
+            s_list.to_excel(writer, sheet_name=s)
 
 
 # このファイルはモジュールなので直接実行はしません
