@@ -40,6 +40,7 @@ def DaihyoList():
         team_data = pd.read_excel(file,
                                   sheet_name='クラブ情報',
                                   dtype='object')
+        # メンバー情報から代表の住所を取得する
         team_member = pd.read_excel(file,
                                     sheet_name='メンバー情報',
                                     dtype='object')
@@ -48,6 +49,7 @@ def DaihyoList():
         line = team_data.iloc[[2, 3, 4, 5], [1]].T
         daihyo_name = str(line.iat[0, 1])
         team_member.dropna(subset=['姓'], inplace=True)
+        # 正規表現で代表の名前とマッチ
         for index, member in team_member.iterrows():
             sei = str(member['姓'])
             mei = str(member['名'])
