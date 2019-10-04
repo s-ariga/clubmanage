@@ -16,6 +16,7 @@ DBPATH = "../sqlite/2019club.db"
 DATAPATH = "../data/"
 DATAGLOB = DATAPATH + "*.xlsx"
 OUTPUTPATH = "../output/"
+print("before moushikoni")
 
 if __name__ == '__main__':
     # Excelファイルを探す
@@ -26,6 +27,8 @@ if __name__ == '__main__':
     sankahi_list = pd.DataFrame([])
 
     # PandasでExcelを読み込み。射手データ読み込み
+    print(datalist)
+    print("hello")
     for file in datalist:
         print(file)
         shashu_data = pd.read_excel(file,
@@ -59,22 +62,22 @@ if __name__ == '__main__':
                                  sort=False,
                                  ignore_index=True)
     # 10m競技のリスト読み込み
-    shashu_10m_list = cf.shashu_10m(path='../data10mp60/')
+#    shashu_10m_list = cf.shashu_10m(path='../data10mp60/')
     # 10m伏射の参加費を計算
-    sankahi_list = cf.sankahi_10m_calc(sankahi_list, shashu_10m_list)
-    sankahi_list = sankahi_list.fillna(0)
+#    sankahi_list = cf.sankahi_10m_calc(sankahi_list, shashu_10m_list)
+#    sankahi_list = sankahi_list.fillna(0)
     # 他の競技の参加費合計にAR60PRの参加費を加算
-    sankahi_list['総合計'] = sankahi_list['合計'] + sankahi_list['AR60PR']
-    sankahi_list['振込日'] = ''
+#    sankahi_list['総合計'] = sankahi_list['合計'] + sankahi_list['AR60PR']
+#    sankahi_list['振込日'] = ''
     # 10m伏射のリストを保存
-    shashu_10m_list.to_excel(OUTPUTPATH + '10m伏射射手.xlsx')
+#    shashu_10m_list.to_excel(OUTPUTPATH + '10m伏射射手.xlsx')
     # 10m伏射とその他競技のデータをマージ
     # その前に、'日ラID'の列をstrにキャスト。何故かint型が混じるので
     shashu_list['日ラID'] = shashu_list['日ラID'].astype(str)
-    shashu_10m_list['日ラID'] = shashu_10m_list['日ラID'].astype(str)
-    shashu_list = pd.merge(shashu_list, shashu_10m_list,
-                           how='outer',
-                           on=['氏名', 'ふりがな', '日ラID', 'チーム名'])
+#    shashu_10m_list['日ラID'] = shashu_10m_list['日ラID'].astype(str)
+#    shashu_list = pd.merge(shashu_list, shashu_10m_list,
+#                           how='outer',
+#                           on=['氏名', 'ふりがな', '日ラID', 'チーム名'])
     # 種目ごとの射手リスト作成
     cf.shumoku_shashu_list(shashu_list)
 

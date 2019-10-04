@@ -5,6 +5,7 @@ Created on Mon Apr 29 13:59:31 2019
 @author: seiic
 
 v0.5: 出力ファイル名を日本語に変更した
+v0.6: 秋の大会用。10 Proneないので、コメントアウト
 
 """
 import pandas as pd
@@ -93,6 +94,7 @@ def sankahi_calc(shashu, team):
 
     ryoukin = pd.DataFrame()
     ryoukin['チーム名'] = team_name
+    print(team_name)
 
     # 個人エントリーと団体エントリーそれぞれの人数をカウントして計算
     for s in shumoku:
@@ -198,18 +200,18 @@ def shumoku_shashu_list(shashu_list, output="../output/"):
             cols = ['氏名', 'ふりがな', 'チーム名']
             # ARMIXの実施日は１つなので、希望日はなし
             if s == 'ARMIX':
-                cols += ['ARMIX', 'ARMIXチーム名', '特記事項_x']
+                cols += ['ARMIX', 'ARMIXチーム名', '特記事項']
             else:
-                cols += [s, s + '希望日', '特記事項_x']
+                cols += [s, s + '希望日', '特記事項']
             s_list = shashu_list[cols].dropna(subset=[s])
             s_list.reset_index(inplace=True)
             s_list.to_excel(writer, sheet_name=s)
 
-        for s in shumoku_10m:
-            cols = ['氏名', 'ふりがな', 'チーム名', s, s + '希望日', '特記事項_y']
-            s_list = shashu_list[cols].dropna(subset=[s])
-            s_list.reset_index(inplace=True)
-            s_list.to_excel(writer, sheet_name=s)
+#        for s in shumoku_10m:
+#            cols = ['氏名', 'ふりがな', 'チーム名', s, s + '希望日', '特記事項']
+#            s_list = shashu_list[cols].dropna(subset=[s])
+#            s_list.reset_index(inplace=True)
+#            s_list.to_excel(writer, sheet_name=s)
 
 
 # このファイルはモジュールなので直接実行はしません
