@@ -126,6 +126,7 @@ def shashu_10m(path):
     """
 
     import os
+    import sys
     import glob
 
     # 10m射手のファイルは別フォルダに置く

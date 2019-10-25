@@ -1,4 +1,10 @@
+# Copyright (c) 2019 Seiichi Ariga
+#
+# This software is released under the MIT License.
+# https://opensource.org/licenses/MIT
+
 # -*- coding: utf-8 -*-
+
 """
 各チームのクラブ戦エントリーを集計するスクリプト
 
@@ -43,8 +49,8 @@ if __name__ == '__main__':
         del shashu_data['番号']
         # チーム名を最初の射手のチーム名[0, 5]から取得
         team_name = shashu_data.iloc[0, 5]
-#        print(file)
-#        print(shashu_data["チーム名"])
+        print(file)
+        print(shashu_data["チーム名"])
         # チームのデータを登録リストに追加
         shashu_list = pd.concat([shashu_list, shashu_data],
                                 sort=False,
