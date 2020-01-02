@@ -11,7 +11,9 @@ import clubfunc as cf
 DATA_DIR = "../output/"
 DATA_FILE = "全射手一覧.xlsx"
 
+
 class club():
+    pass
 
 
 def create_team_list(filename):

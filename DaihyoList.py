@@ -30,7 +30,6 @@ No.	姓	名	ふりがな	性別	日ラ会員ID	生年月日	郵便番号	都道�
 
 '''
 
-
 def DaihyoList():
     data_list = glob.glob(DATA_GLOB)
     daihyo_list = pd.DataFrame([])

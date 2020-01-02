@@ -41,3 +41,6 @@ class shashu:
 
     def output(self, row):
         pass
+
+if __name__ == "__main__":
+    pass

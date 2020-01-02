@@ -1,4 +1,10 @@
+# Copyright (c) 2019 Seiichi Ariga
+#
+# This software is released under the MIT License.
+# https://opensource.org/licenses/MIT
+
 # -*- coding: utf-8 -*-
+
 """
 Created on Mon Apr 29 13:59:31 2019
 
@@ -33,6 +39,7 @@ shumoku_10m = [
     'AR60PR個人'
 ]
 
+# 種目名リスト
 shumoku_dk = [
    'FR3x40D',
    'FR3x40',
