@@ -26,6 +26,7 @@ event_list_10m = [
     'AR60PRW',
     'AR60W',
     'AR60',
+    'AR40PRW'
     'ARMIX'
 ]
 

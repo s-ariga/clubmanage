@@ -44,16 +44,15 @@ if __name__ == '__main__':
         # 氏名空白の行は削除
         # Tip: dropメソッドは元データを改変しないので、inplace = Trueか以下が必要
         # "入力例"を削除
-        shashu_data = shashu_data.dropna(subset=['氏名']).drop(0)
+        shashu_data = shashu_data.dropna(subset=['姓']).drop(0)
         # "番号"も必要ないので削除
         del shashu_data['番号']
         # チーム名を最初の射手のチーム名[0, 5]から取得
-        team_name = shashu_data.iloc[0, 5]
+        team_name = shashu_data.iloc[0, 7]
         print(file)
         print(shashu_data["チーム名"])
         # チームのデータを登録リストに追加
-        shashu_list = pd.concat([shashu_list, shashu_data],
-                                sort=False,
+        shashu_list = pd.concat([shashu_list, shashu_data], sort=False,
                                 ignore_index=True)
         team_data = pd.read_excel(file,
                                   sheet_name='申込フォーム',

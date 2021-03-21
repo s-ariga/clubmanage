@@ -30,6 +30,7 @@ No.	姓	名	ふりがな	性別	日ラ会員ID	生年月日	郵便番号	都道�
 
 '''
 
+
 def DaihyoList():
     data_list = glob.glob(DATA_GLOB)
     daihyo_list = pd.DataFrame([])
@@ -43,8 +44,7 @@ def DaihyoList():
         team_member = pd.read_excel(file,
                                     sheet_name='メンバー情報',
                                     dtype='object')
-        team_data.rename(columns={'クラブ登録者名簿': n},
-                         inplace=True)
+        team_data.rename(columns={'クラブ登録者名簿': n}, inplace=True)
         line = team_data.iloc[[2, 3, 4, 5], [1]].T
         daihyo_name = str(line.iat[0, 1])
         team_member.dropna(subset=['姓'], inplace=True)

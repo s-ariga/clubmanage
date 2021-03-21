@@ -12,15 +12,19 @@ Created on Mon Apr 29 13:59:31 2019
 
 v0.5: 出力ファイル名を日本語に変更した
 v0.6: 秋の大会用。10 Proneないので、コメントアウト
+v0.7: 2021 5月用 10mPR復活
 
 """
 import pandas as pd
 
 touroku = '団体登録する'
 
+# TODO: 設定ファイルを別に作って読み込むことにする
+
 shumoku_10m = [
     'AR60',
     'AR60W',
+    'AR60PR',
     'ARMIX'
 ]
 
@@ -40,20 +44,21 @@ shumoku_10m = [
 ]
 
 # 種目名リスト
+# ? 'D'ってついてる種目はなんだっけ？
 shumoku_dk = [
-   'FR3x40D',
-   'FR3x40',
-   'FR60PRD',
-   'FR60PR',
-   'AR60D',
-   'AR60',
-   'R3x40D',
-   'R3x40',
-   'R60PRD',
-   'R60PR',
-   'AR60WD',
-   'AR60W',
-   'ARMIX'
+    'FR3x40D',
+    'FR3x40',
+    'FR60PRD',
+    'FR60PR',
+    'AR60D',
+    'AR60',
+    'R3x40D',
+    'R3x40',
+    'R60PRD',
+    'R60PR',
+    'AR60WD',
+    'AR60W',
+    'ARMIX'
 ]
 
 # 団体登録のある種目
@@ -81,7 +86,7 @@ price = {
 }
 
 
-def sankahi_calc(shashu, team):
+def sankahi_calc(shashu: pd.DataFrame, team: pd.DataFrame):
     """
     チームの射手データと団体登録データから、チームの参加費を計算
 
@@ -90,7 +95,7 @@ def sankahi_calc(shashu, team):
     shashu : pandas.DataFrame
         チームの射手リスト
     team : pandas.DataFrame
-         チームの団体登録
+        チームの団体登録
 
     Returns
     ----------------------
@@ -111,19 +116,20 @@ def sankahi_calc(shashu, team):
         ryoukin[s + '団体'] = dantai.sum() * price[s]
         ryoukin[s] = kojin.sum() * price[s]
     # 団体登録費の計算
-    for s in dantai_list:
-        ryoukin[s] = price['団体登録'] if team[s].values == '団体登録する' else 0
+    # TODO -> 団体登録費の計算バグ取り 202011
+#    for s in dantai_list:
+#        ryoukin[s] = price['団体登録'] if team[s].values == '団体登録する' else 0
     ryoukin['合計'] = ryoukin.sum(axis=1)
     return ryoukin
 
 
-def shashu_10m(path):
+def shashu_10m(path: str) -> pd.DataFrame:
     """
     10m伏射の集計をする
 
     Parameters
     -----------------------
-    path : string
+    path : str
         データ置き場のパス
 
     Returns
@@ -156,7 +162,7 @@ def shashu_10m(path):
     return shashu_list_10m
 
 
-def sankahi_10m_calc(sankahi, shashu_list):
+def sankahi_10m_calc(sankahi: pd.DataFrame, shashu_list: pd.DataFrame) -> pd.DataFrame:
     """
     10m伏射の参加費を計算し、参加費リストに追加
 
@@ -190,7 +196,7 @@ def sankahi_10m_calc(sankahi, shashu_list):
     return sankahi
 
 
-def shumoku_shashu_list(shashu_list, output="../output/"):
+def shumoku_shashu_list(shashu_list: pd.DataFrame, output="../output/"):
     """
     種目別射手リストを作成し、ファイルに保存する
 
@@ -205,12 +211,14 @@ def shumoku_shashu_list(shashu_list, output="../output/"):
     # Pandas のwriterを使って、種目別にシートを作成する
     with pd.ExcelWriter(output + '種目別射手リスト.xlsx') as writer:
         for s in shumoku:
-            cols = ['氏名', 'ふりがな', 'チーム名']
-            # ARMIXの実施日は１つなので、希望日はなし
+            cols = ['姓', '名', 'ふりがな', 'チーム名']
+            # SBPR以外の実施日は１つなので、希望日はなし
             if s == 'ARMIX':
-                cols += ['ARMIX', 'ARMIXチーム名', '特記事項']
-            else:
+                cols += ['ARMIX', '特記事項']
+            elif s == 'FR60PR' or s == 'R60PR':
                 cols += [s, s + '希望日', '特記事項']
+            else:
+                cols += [s, '特記事項']
             s_list = shashu_list[cols].dropna(subset=[s])
             s_list.reset_index(inplace=True)
             s_list.to_excel(writer, sheet_name=s)
