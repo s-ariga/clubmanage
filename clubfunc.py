@@ -220,6 +220,8 @@ def shumoku_shashu_list(shashu_list: pd.DataFrame, output="../output/"):
             else:
                 cols += [s, '特記事項']
             s_list = shashu_list[cols].dropna(subset=[s])
+            s_name = s_list['姓'].map(str) + " " + s_list['名'].map(str)
+            s_list['氏名'] = s_name
             s_list.reset_index(inplace=True)
             s_list.to_excel(writer, sheet_name=s)
 
