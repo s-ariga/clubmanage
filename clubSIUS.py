@@ -31,9 +31,9 @@ event_list_10m = [
 ]
 
 event_list_50m = [
-    'R3X40',
+    'R3X20',
     'R60PR',
-    'FR3X40',
+    'FR3X20',
     'FR60PR'
 ]
 

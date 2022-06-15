@@ -13,6 +13,7 @@ Created on Mon Apr 29 13:59:31 2019
 v0.5: 出力ファイル名を日本語に変更した
 v0.6: 秋の大会用。10 Proneないので、コメントアウト
 v0.7: 2021 5月用 10mPR復活
+v0.8: 2022 7月用 10mPRも同じエントリーシート
 
 """
 import pandas as pd
@@ -29,9 +30,9 @@ shumoku_10m = [
 ]
 
 shumoku_50m = [
-    'FR3x40',
+    'FR3x20',
     'FR60PR',
-    'R3x40',
+    'R3x20',
     'R60PR'
 ]
 
@@ -46,14 +47,14 @@ shumoku_10m = [
 # 種目名リスト
 # ? 'D'ってついてる種目はなんだっけ？
 shumoku_dk = [
-    'FR3x40D',
-    'FR3x40',
+    'FR3x20D',
+    'FR3x20',
     'FR60PRD',
     'FR60PR',
     'AR60D',
     'AR60',
-    'R3x40D',
-    'R3x40',
+    'R3x20D',
+    'R3x20',
     'R60PRD',
     'R60PR',
     'AR60WD',
@@ -63,25 +64,25 @@ shumoku_dk = [
 
 # 団体登録のある種目
 dantai_list = [
-    'FR3x40団体登録',
+    'FR3x20団体登録',
     'FR60PR団体登録',
     'AR60団体登録',
-    'R3x40団体登録',
+    'R3x20団体登録',
     'R60PR団体登録',
     'AR60W団体登録'
 ]
 
-# SB = 7,000 Yen, AR = 3,000 Yen
-# 団体登録 = 6000 Yen
+# SB = 7,500 Yen, AR = 3,500 Yen
+# 団体登録 = 6,000 Yen
 price = {
-    'FR3x40': 7000,
-    'FR60PR': 7000,
-    'AR60': 3000,
-    'R3x40': 7000,
-    'R60PR': 7000,
-    'AR60W': 3000,
-    'ARMIX': 3000,
-    'AR60PR': 3000,
+    'FR3x20': 7500,
+    'FR60PR': 7500,
+    'AR60': 3500,
+    'R3x20': 7500,
+    'R60PR': 7500,
+    'AR60W': 3500,
+    'ARMIX': 3500,
+    'AR60PR': 3500,
     '団体登録': 6000
 }
 
@@ -114,12 +115,17 @@ def sankahi_calc(shashu: pd.DataFrame, team: pd.DataFrame):
         dantai = shashu[s] == '団体'
         # それぞれの人数に競技ごとの個人エントリーフィーを掛ける
         ryoukin[s + '団体'] = dantai.sum() * price[s]
+        if(dantai.sum() > 0):
+            tourokuryoukin = price["団体登録"]
+            if s.startswith("AR"):
+                tourokuryoukin = price["団体登録"]
+            ryoukin[s + '団体登録'] = tourokuryoukin
         ryoukin[s] = kojin.sum() * price[s]
     # 団体登録費の計算
     # TODO -> 団体登録費の計算バグ取り 202011
 #    for s in dantai_list:
 #        ryoukin[s] = price['団体登録'] if team[s].values == '団体登録する' else 0
-    ryoukin['合計'] = ryoukin.sum(axis=1)
+    ryoukin['合計'] = ryoukin.sum(axis=1, numeric_only=True)
     return ryoukin
 
 
@@ -216,7 +222,7 @@ def shumoku_shashu_list(shashu_list: pd.DataFrame, output="../output/"):
             if s == 'ARMIX':
                 cols += ['ARMIX', '特記事項']
             elif s == 'FR60PR' or s == 'R60PR':
-                cols += [s, s + '希望日', '特記事項']
+                cols += [s, s + '\n希望日', '特記事項']
             else:
                 cols += [s, '特記事項']
             s_list = shashu_list[cols].dropna(subset=[s])

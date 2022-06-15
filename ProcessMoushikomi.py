@@ -34,7 +34,6 @@ if __name__ == '__main__':
 
     # PandasでExcelを読み込み。射手データ読み込み
     print(datalist)
-    print("hello")
     for file in datalist:
         print(file)
         shashu_data = pd.read_excel(file,
@@ -47,21 +46,27 @@ if __name__ == '__main__':
         shashu_data = shashu_data.dropna(subset=['姓']).drop(0)
         # "番号"も必要ないので削除
         del shashu_data['番号']
-        # チーム名を最初の射手のチーム名[0, 5]から取得
+        # shashu_data = shashu_data['日ラID'].replace('-', '')
+        # shashu_data = shashu_data['日ラID'].replace(' ', '')
+        # shashu_data = shashu_data['日ラID'].replace('_', '')
+        # チーム名を最初の射手のチーム名[0, 7]から取得
         team_name = shashu_data.iloc[0, 7]
+        # チーム名を入力していない場合、エラーを出して終了
+        if team_name == "":
+            print("team_name が空です")
+            print(file)
+            exit()
         print(file)
         print(shashu_data["チーム名"])
         # チームのデータを登録リストに追加
         shashu_list = pd.concat([shashu_list, shashu_data], sort=False,
                                 ignore_index=True)
+        # INFO: 種目のセルは、年度によって違う
         team_data = pd.read_excel(file,
                                   sheet_name='申込フォーム',
                                   nrows=1,
-                                  usecols=[8, 10, 12, 14, 16, 18])
+                                  usecols=[9, 11, 13, 15, 17, 19])
         team_data['チーム名'] = team_name
-        if team_name == "":
-            print(file)
-            print("チーム名")
         team_data = team_data.iloc[:, [6, 0, 1, 2, 3, 4, 5]]
         team_list = pd.concat([team_list, team_data], sort=False,
                               ignore_index=True)
@@ -83,7 +88,7 @@ if __name__ == '__main__':
 #    shashu_10m_list.to_excel(OUTPUTPATH + '10m伏射射手.xlsx')
     # 10m伏射とその他競技のデータをマージ
     # その前に、'日ラID'の列をstrにキャスト。何故かint型が混じるので
-    shashu_list['日ラID'] = shashu_list['日ラID'].astype(str)
+    ##shashu_list['日ラID'] = shashu_list['日ラID'].astype(str)
 #    shashu_10m_list['日ラID'] = shashu_10m_list['日ラID'].astype(str)
 #    shashu_list = pd.merge(shashu_list, shashu_10m_list,
 #                           how='outer',
@@ -93,5 +98,7 @@ if __name__ == '__main__':
 
     # 射手リスト、チームリスト、参加費一覧をExcelに出力
     shashu_list.to_excel(OUTPUTPATH + '全射手一覧.xlsx')
+    # 請求書の作成に必要なCSVも出力 2022
+    shashu_list.to_csv(OUTPUTPATH + '全射手一覧.csv')
     team_list.to_excel(OUTPUTPATH + '全チーム一覧.xlsx')
     sankahi_list.to_excel(OUTPUTPATH + '全チーム参加費集計.xlsx')
