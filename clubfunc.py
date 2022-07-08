@@ -219,9 +219,10 @@ def shumoku_shashu_list(shashu_list: pd.DataFrame, output="../output/"):
         for s in shumoku:
             cols = ['姓', '名', 'ふりがな', 'チーム名']
             # SBPR以外の実施日は１つなので、希望日はなし
+            # ! 2022ほぼすべての種目で希望日あり
             if s == 'ARMIX':
                 cols += ['ARMIX', '特記事項']
-            elif s == 'FR60PR' or s == 'R60PR':
+            elif s == 'FR60PR' or s == 'R60PR' or s == 'FR3x20' or s == 'R3x20' or s == 'AR60PR' or s == 'AR60' or s == 'AR60W':
                 cols += [s, s + '\n希望日', '特記事項']
             else:
                 cols += [s, '特記事項']
