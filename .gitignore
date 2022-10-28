@@ -1,6 +1,7 @@
 # いらないファイルリスト
 *.exe
 __pycache__/
+.pytest_cache/
 activate.bat
 *~
 .vscode/*
