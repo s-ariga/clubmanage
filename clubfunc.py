@@ -25,8 +25,8 @@ touroku = '団体登録する'
 shumoku_10m = [
     'AR60',
     'AR60W',
-    'AR60PR',
     'ARMIX'
+    #    'AR60PR' # 秋の大会ではない種目
 ]
 
 shumoku_50m = [
@@ -82,7 +82,7 @@ price = {
     'R60PR': 7500,
     'AR60W': 3500,
     'ARMIX': 3500,
-    'AR60PR': 3500,
+    #    'AR60PR': 3500, # 秋の大会には無い種目
     '団体登録': 6000
 }
 
@@ -103,6 +103,8 @@ def sankahi_calc(shashu: pd.DataFrame, team: pd.DataFrame):
     ryokin : pandas.Series
         チームの料金
     """
+    print(shashu)
+    print(team)
     team_name = team['チーム名']
 
     ryoukin = pd.DataFrame()

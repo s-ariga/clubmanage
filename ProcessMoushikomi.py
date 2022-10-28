@@ -50,6 +50,7 @@ if __name__ == '__main__':
         # チーム名を最初の射手のチーム名[0, 7]から取得
         team_name = shashu_data.iloc[0, 7]
         # チーム名を入力していない場合、エラーを出して終了
+        print("チーム名: ", team_name)
         if team_name == "":
             print("team_name が空です")
             print(file)
@@ -60,12 +61,15 @@ if __name__ == '__main__':
         shashu_list = pd.concat([shashu_list, shashu_data], sort=False,
                                 ignore_index=True)
         # INFO: 種目のセルは、年度によって違う
+        # 団体登録料のチェック。種目が変わると位置ずれる
         team_data = pd.read_excel(file,
                                   sheet_name='申込フォーム',
                                   nrows=1,
-                                  usecols=[9, 11, 13, 15, 17, 19])
+                                  usecols=[9, 10, 12, 13, 14, 16])
         team_data['チーム名'] = team_name
+        print("team_data: ", team_data)
         team_data = team_data.iloc[:, [6, 0, 1, 2, 3, 4, 5]]
+        print("team_data line 71: ", team_data)
         team_list = pd.concat([team_list, team_data], sort=False,
                               ignore_index=True)
         # チームの参加費を計算して参加費リストに追加
