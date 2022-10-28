@@ -4,3 +4,4 @@ __pycache__/
 activate.bat
 *~
 .vscode/*
+*.xlsx

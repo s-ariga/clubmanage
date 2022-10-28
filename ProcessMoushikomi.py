@@ -11,10 +11,8 @@
 @s_ariga 2019
 
 """
-import os
 import glob
 import pandas as pd
-import numpy as np
 
 import clubfunc as cf
 
