@@ -117,7 +117,7 @@ def sankahi_calc(shashu: pd.DataFrame, team: pd.DataFrame):
         dantai = shashu[s] == '団体'
         # それぞれの人数に競技ごとの個人エントリーフィーを掛ける
         ryoukin[s + '団体'] = dantai.sum() * price[s]
-        if(dantai.sum() > 0):
+        if (dantai.sum() > 0):
             tourokuryoukin = price["団体登録"]
             if s.startswith("AR"):
                 tourokuryoukin = price["団体登録"]
@@ -222,9 +222,10 @@ def shumoku_shashu_list(shashu_list: pd.DataFrame, output="../output/"):
             cols = ['姓', '名', 'ふりがな', 'チーム名']
             # SBPR以外の実施日は１つなので、希望日はなし
             # ! 2022ほぼすべての種目で希望日あり
+            # ! 2022秋。そうでもない
             if s == 'ARMIX':
                 cols += ['ARMIX', '特記事項']
-            elif s == 'FR60PR' or s == 'R60PR' or s == 'FR3x20' or s == 'R3x20' or s == 'AR60PR' or s == 'AR60' or s == 'AR60W':
+            elif s == 'FR60PR' or s == 'R60PR':
                 cols += [s, s + '\n希望日', '特記事項']
             else:
                 cols += [s, '特記事項']

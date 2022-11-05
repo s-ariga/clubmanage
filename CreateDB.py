@@ -1,14 +1,5 @@
-# Copyright (c) 2019 Seiichi Ariga
-#
-# This software is released under the MIT License.
-# https://opensource.org/licenses/MIT
-
-# -*- coding: utf-8 -*-
-
 """
-Created on Sun Apr 28 13:17:46 2019
-
-@author: Seiichi Ariga
+Seiichi Ariga <seiichi.ariga@gmail.com>
 """
 
 import sqlite3

@@ -1,12 +1,8 @@
-# Copyright (c) 2019 Seiichi Ariga
-#
-# This software is released under the MIT License.
-# https://opensource.org/licenses/MIT
-
-# -*- coding: utf-8 -*-
+'''
+Seiichi Ariga <seiichi.ariga@gmail.com>
+'''
 
 import pandas as pd
-import numpy as np
 
 # SiusRank入力のためのカラム名 + Eventを追加(groupby用)
 # 詳細はSiusRank参照

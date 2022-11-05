@@ -1,14 +1,13 @@
-﻿#!/usr/bin/env python
-# -*- coding : utf-8 -*-
+﻿'''
+Seiichi Ariga <seiichi.ariga@gmail.com> 2022
+'''
 '''
 各チームの代表者リストを作成する
 '''
-import os
+
 import glob
 import re
 import pandas as pd
-import clubfunc as cf
-
 DATA_PATH = "../dataclub/"
 DATA_GLOB = DATA_PATH + "*.xlsx"
 OUTPUT_PATH = "../output/"

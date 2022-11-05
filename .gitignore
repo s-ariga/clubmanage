@@ -6,3 +6,4 @@ activate.bat
 *~
 .vscode/*
 *.xlsx
+*.ps1

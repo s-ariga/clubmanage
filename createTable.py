@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
 """
-Created on Sun Apr 28 13:22:39 2019
-
-@author: seiic
+Seiichi Ariga <seiichi.ariga@gmail.com>
 """
 
 import sqlite3
@@ -19,16 +16,16 @@ for file in sqlfiles:
     fd = open(file, "r", encoding="utf-8")
     sql = fd.read()
     fd.close()
-    
+
     sqlcommands = sql.split(';')
-    
+
     for command in sqlcommands:
         try:
             cur.execute(command)
         except Error as e:
-                print(e)
-                conn.close()
-                cur.close()
-                
+            print(e)
+            conn.close()
+            cur.close()
+
 conn.close()
 cur.close()

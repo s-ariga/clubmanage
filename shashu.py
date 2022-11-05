@@ -1,17 +1,6 @@
-# Copyright (c) 2019 Seiichi Ariga
-#
-# This software is released under the MIT License.
-# https://opensource.org/licenses/MIT
-
-# -*- coding: utf-8 -*-
-
-
 """
-Created on Sun Apr 28 14:47:53 2019
-
-@author: seiic
+Seiichi Ariga <seiichi.ariga@gmail.com>
 """
-import pandas as pd
 
 
 class shashu:
