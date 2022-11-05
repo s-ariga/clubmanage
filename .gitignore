@@ -2,8 +2,10 @@
 *.exe
 __pycache__/
 .pytest_cache/
-activate.bat
 *~
 .vscode/*
+# 個人情報が含まれるもの
 *.xlsx
+# 自分用のスクリプト
 *.ps1
+activate.bat
