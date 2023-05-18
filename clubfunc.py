@@ -30,10 +30,10 @@ shumoku_10m = [
 ]
 
 shumoku_50m = [
-    'FR3x20',
-    'FR60PR',
-    'R3x20',
-    'R60PR'
+    'R3PM',
+    'RPRM',
+    'R3PW',
+    'RPRW'
 ]
 
 # 10mと50m両方の種目名
@@ -64,22 +64,22 @@ shumoku_dk = [
 
 # 団体登録のある種目
 dantai_list = [
-    'FR3x20団体登録',
-    'FR60PR団体登録',
+    'R3PM団体登録',
+    'RPRM団体登録',
     'AR60団体登録',
-    'R3x20団体登録',
-    'R60PR団体登録',
+    'R3PW団体登録',
+    'RPRW団体登録',
     'AR60W団体登録'
 ]
 
 # SB = 7,500 Yen, AR = 3,500 Yen
 # 団体登録 = 6,000 Yen
 price = {
-    'FR3x20': 7500,
-    'FR60PR': 7500,
+    'R3PM': 7500,
+    'RPRM': 7500,
     'AR60': 3500,
-    'R3x20': 7500,
-    'R60PR': 7500,
+    'R3PW': 7500,
+    'RPRW': 7500,
     'AR60W': 3500,
     'ARMIX': 3500,
     #    'AR60PR': 3500, # 秋の大会には無い種目
@@ -145,9 +145,7 @@ def shashu_10m(path: str) -> pd.DataFrame:
     shashu_list_10m : pandas.DataFrame
         10m射手のリスト in DataFarme
     """
-
-    import os
-    import sys
+    
     import glob
 
     # 10m射手のファイルは別フォルダに置く

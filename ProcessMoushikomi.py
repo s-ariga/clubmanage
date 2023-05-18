@@ -74,7 +74,7 @@ if __name__ == '__main__':
         team_data['団体数'] = team_num
         team_list = pd.concat([team_list, team_data], sort=False, ignore_index=True)
         # チームリストから空の行をdropna
-        # ! 団体登録料が発生するのは6種目だけ
+        # ! 団体登録料が発生するのは以下の6種目だけ
         team_list = team_list.dropna(subset=["FR3x20", "FR60PR", "AR60", "R3x20", "R60PR", "AR60W"], how="all")
 
         # チームの参加費を計算して参加費リストに追加
@@ -95,11 +95,11 @@ if __name__ == '__main__':
 #    shashu_10m_list.to_excel(OUTPUTPATH + '10m伏射射手.xlsx')
 # 10m伏射とその他競技のデータをマージ
 # その前に、'日ラID'の列をstrにキャスト。何故かint型が混じるので
-# shashu_list['日ラID'] = shashu_list['日ラID'].astype(str)
-#    shashu_10m_list['日ラID'] = shashu_10m_list['日ラID'].astype(str)
-#    shashu_list = pd.merge(shashu_list, shashu_10m_list,
-#                           how='outer',
-#                           on=['氏名', 'ふりがな', '日ラID', 'チーム名'])
+    #shashu_list['日ラID'] = shashu_list['日ラID'].astype(str)
+    #shashu_10m_list['日ラID'] = shashu_10m_list['日ラID'].astype(str)
+    # shashu_list = pd.merge(shashu_list, shashu_10m_list,
+    #                       how='outer',
+    #                       on=['姓', '名', 'ふりがな', '日ラID', 'チーム名'])
     # 種目ごとの射手リスト作成
     cf.shumoku_shashu_list(shashu_list)
 
