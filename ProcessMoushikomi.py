@@ -31,16 +31,18 @@ if __name__ == '__main__':
                                     dtype='object')
         # 氏名空白の行は削除
         # Tip: dropメソッドは元データを改変しないので、inplace = Trueか以下が必要
+
         # "入力例"を削除
         shashu_data = shashu_data.dropna(subset=['姓']).drop(0)
         # "番号"も必要ないので削除
         del shashu_data['番号']
+
         # TODO: 日ラIDの修正、はいまはやってない
         # shashu_data = shashu_data['日ラID'].replace('-', '')
         # shashu_data = shashu_data['日ラID'].replace(' ', '')
         # shashu_data = shashu_data['日ラID'].replace('_', '')
-        # チーム名を最初の射手のチーム名[0, 7]から取得
-        team_name = shashu_data.iloc[0, 7]
+        # チーム名を最初の射手のチーム名[0, 8]から取得
+        team_name = shashu_data.iloc[0, 8]
         # チーム名を入力していない場合、エラーを出して終了
         print("チーム名: ", team_name)
         if team_name == "":
@@ -56,17 +58,18 @@ if __name__ == '__main__':
         team_data = pd.read_excel(file,
                                   sheet_name='申込フォーム',
                                   skiprows=2,
-                                  usecols=[9, 10, 12, 13, 14, 16])
+                                  usecols=[9, 10, 12, 14, 15, 17, 19])
         # 入力例の部分を消去
         team_data = team_data.drop(0)
         team_data['チーム名'] = team_name
         print("team_data: ", team_data)
         # 出力用に、チーム名を最初にもってくる
         team_num = 0  # 団体数を数えていく
-        team_data = team_data.iloc[:, [6, 0, 1, 2, 3, 4, 5]]
+        team_data = team_data.iloc[:, [0, 1, 2, 3, 4, 5, 6]]
         for data in team_data.itertuples():
             print(data)
-        for shumoku in ["FR3x20", "FR60PR", "AR60", "R3x20", "R60PR", "AR60W"]:
+#        for shumoku in ["FR3x20", "FR60PR", "AR60", "R3x20", "R60PR", "AR60W"]:
+        for shumoku in cf.shumoku_team:
             print(team_data[shumoku])
             if '団体' in team_data[shumoku].unique():
                 team_num += 1
@@ -75,7 +78,7 @@ if __name__ == '__main__':
         team_list = pd.concat([team_list, team_data], sort=False, ignore_index=True)
         # チームリストから空の行をdropna
         # ! 団体登録料が発生するのは以下の6種目だけ
-        team_list = team_list.dropna(subset=["FR3x20", "FR60PR", "AR60", "R3x20", "R60PR", "AR60W"], how="all")
+        team_list = team_list.dropna(subset=cf.shumoku_team, how="all")
 
         # チームの参加費を計算して参加費リストに追加
         sankahi_list = pd.concat([cf.sankahi_calc(shashu=shashu_data,

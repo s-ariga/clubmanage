@@ -14,6 +14,7 @@ v0.5: 出力ファイル名を日本語に変更した
 v0.6: 秋の大会用。10 Proneないので、コメントアウト
 v0.7: 2021 5月用 10mPR復活
 v0.8: 2022 7月用 10mPRも同じエントリーシート
+v0.9: 2023 7月用 種目名変更 FR3X20 -> R3PMなど
 
 """
 import pandas as pd
@@ -24,8 +25,7 @@ touroku = '団体登録する'
 
 shumoku_10m = [
     'AR60',
-    'AR60W',
-    'ARMIX'
+    'AR60W'
     #    'AR60PR' # 秋の大会ではない種目
 ]
 
@@ -37,7 +37,9 @@ shumoku_50m = [
 ]
 
 # 10mと50m両方の種目名
-shumoku = shumoku_10m + shumoku_50m
+
+shumoku_team = shumoku_10m + shumoku_50m # 総合団体に使う種目
+shumoku = shumoku_team + ['ARMIX'] # 上+ARMIX or AR60PR
 
 shumoku_10m = [
     'AR60PR団体',

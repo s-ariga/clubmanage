@@ -22,15 +22,14 @@ event_list_10m = [
     'AR60PRW',
     'AR60W',
     'AR60',
-    'AR40PRW'
     'ARMIX'
 ]
 
 event_list_50m = [
-    'R3X20',
-    'R60PR',
-    'FR3X20',
-    'FR60PR'
+    'R3PM',
+    'RPRM',
+    'R3PW',
+    'RPRW'
 ]
 
 event_list = event_list_10m + event_list_50m
