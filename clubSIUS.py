@@ -18,10 +18,10 @@ SIUS_list = [
 ]
 
 event_list_10m = [
+    'ARM',
+    'ARW',
     'AR60PR',
     'AR60PRW',
-    'AR60W',
-    'AR60',
     'ARMIX'
 ]
 

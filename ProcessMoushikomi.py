@@ -58,23 +58,27 @@ if __name__ == '__main__':
         team_data = pd.read_excel(file,
                                   sheet_name='申込フォーム',
                                   skiprows=2,
-                                  usecols=[9, 10, 12, 14, 15, 17, 19])
+                                  usecols=[1, 9, 10, 12, 14, 16, 18, 20])
         # 入力例の部分を消去
         team_data = team_data.drop(0)
+        team_data = team_data.dropna(subset = ['姓'])
         team_data['チーム名'] = team_name
-        print("team_data: ", team_data)
         # 出力用に、チーム名を最初にもってくる
         team_num = 0  # 団体数を数えていく
-        team_data = team_data.iloc[:, [0, 1, 2, 3, 4, 5, 6]]
+        team_data = team_data.iloc[:, [1, 2, 3, 4, 5, 6, 7]]
         for data in team_data.itertuples():
-            print(data)
-#        for shumoku in ["FR3x20", "FR60PR", "AR60", "R3x20", "R60PR", "AR60W"]:
+            # print(data)
+            pass
+        ## ! 一時的に
         for shumoku in cf.shumoku_team:
             print(team_data[shumoku])
             if '団体' in team_data[shumoku].unique():
                 team_num += 1
         print("団体数:", team_num)
         team_data['団体数'] = team_num
+        print('team_data')
+        print(team_data)
+
         team_list = pd.concat([team_list, team_data], sort=False, ignore_index=True)
         # チームリストから空の行をdropna
         # ! 団体登録料が発生するのは以下の6種目だけ
@@ -109,6 +113,6 @@ if __name__ == '__main__':
     # 射手リスト、チームリスト、参加費一覧をExcelに出力
     shashu_list.to_excel(OUTPUTPATH + '全射手一覧.xlsx')
     # 請求書の作成に必要なCSVも出力 2022
-    shashu_list.to_csv(OUTPUTPATH + '全射手一覧.csv')
+    # shashu_list.to_csv(OUTPUTPATH + '全射手一覧.csv')
     team_list.to_excel(OUTPUTPATH + '全チーム一覧.xlsx')
     sankahi_list.to_excel(OUTPUTPATH + '全チーム参加費集計.xlsx')
