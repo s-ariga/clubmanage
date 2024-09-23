@@ -25,8 +25,8 @@ touroku = '団体登録する'
 
 shumoku_10m = [
     'ARM',
-    'ARW'
-    #    'AR60PR' # 秋の大会ではない種目
+    'ARW',
+    # 'ARP60' # 秋の大会ではない種目
 ]
 
 shumoku_50m = [
@@ -38,10 +38,11 @@ shumoku_50m = [
 
 # 10mと50m両方の種目名
 
-shumoku_team = shumoku_10m + shumoku_50m # 総合団体に使う種目
-shumoku = shumoku_team + ['ARMIX'] # 上+ARMIX or AR60PR
+# shumoku_team = shumoku_10m + shumoku_50m # 総合団体に使う種目 ! 藤枝用
+# shumoku = shumoku_team + ['ARMIX'] # 上+ARMIX or AR60PR
+shumoku_team = ['FR3X20', 'FR60PR']
 
-shumoku_10m = [
+shumoku_10m = [ # ? これなに？
     'AR60PR団体',
     'AR60PR個人'
 ]
@@ -56,7 +57,9 @@ shumoku_dk = [
     'RPRW',
     'RPRM',
     'AR60WD',
+    'ARP60',
     'AR60W',
+    'ARP60',
     'ARMIX'
 ]
 
@@ -72,16 +75,24 @@ dantai_list = [
 
 # SB = 7,500 Yen, AR = 3,500 Yen
 # 団体登録 = 6,000 Yen
+# price = {
+#     'R3PM': 7500,
+#     'RPRM': 7500,
+#     'ARM': 3500,
+#     'R3PW': 7500,
+#     'RPRW': 7500,
+#     'ARW': 3500,
+#     'ARMIX': 3500,
+#     'AR60PR': 3500, # 秋の大会には無い種目
+#     '団体登録': 6000
+# }
+
 price = {
-    'R3PM': 7500,
-    'RPRM': 7500,
-    'ARM': 3500,
-    'R3PW': 7500,
-    'RPRW': 7500,
-    'ARW': 3500,
-    'ARMIX': 3500,
-    'AR60PR': 3500, # 秋の大会には無い種目
-    '団体登録': 6000
+    'FR3X20': 11500,
+    'FR60PR': 10500,
+    'FR20PR': 8500,
+    'FR40PRスコープ': 8500,
+    '団体登録': 0
 }
 
 
@@ -110,7 +121,7 @@ def sankahi_calc(shashu: pd.DataFrame, team: pd.DataFrame):
     print(team_name)
 
     # 個人エントリーと団体エントリーそれぞれの人数をカウントして計算
-    for s in shumoku:
+    for s in ['FR3X20', 'FR60PR', 'FR20PR', 'FR40PRスコープ' ]: # 大口径変更202409
         kojin = shashu[s] == '個人'
         dantai = shashu[s] == '団体'
         # それぞれの人数に競技ごとの個人エントリーフィーを掛ける
@@ -126,7 +137,8 @@ def sankahi_calc(shashu: pd.DataFrame, team: pd.DataFrame):
 #    for s in dantai_list:
 #        ryoukin[s] = price['団体登録'] if team[s].values == '団体登録する' else 0
     ryoukin['合計'] = ryoukin.sum(axis=1, numeric_only=True)
-    return ryoukin
+    # 各射手について行ができているので、最初の行だけ返す
+    return ryoukin[:1]
 
 
 def shashu_10m(path: str) -> pd.DataFrame:
@@ -203,6 +215,9 @@ def sankahi_10m_calc(sankahi: pd.DataFrame, shashu_list: pd.DataFrame) -> pd.Dat
 def shumoku_shashu_list(shashu_list: pd.DataFrame, output="../output/"):
     """
     種目別射手リストを作成し、ファイルに保存する
+    特記事項は全種目共通(同じ内容)になるので、読み取るときに注意が必要。
+    複数種目の場合、ごくまれにどの種目のことか分からないことがある。
+    「午前希望」とか。両方なのか、日付を記入し忘れたのかが不明になる。
 
     Parameters
     ---------------------
@@ -214,19 +229,21 @@ def shumoku_shashu_list(shashu_list: pd.DataFrame, output="../output/"):
 
     # Pandas のwriterを使って、種目別にシートを作成する
     with pd.ExcelWriter(output + '種目別射手リスト.xlsx') as writer:
-        for s in shumoku:
-            cols = ['姓', '名', 'ふりがな', 'チーム名']
+        for s in ['FR3X20', "FR60PR", 'FR20PR', 'FR40PRスコープ']:
+            cols = ['氏', '名', 'ふりがな', 'チーム名']
             # SBPR以外の実施日は１つなので、希望日はなし
             # ! 2022ほぼすべての種目で希望日あり
             # ! 2022秋。そうでもない
             if s == 'ARMIX':
-                cols += ['ARMIX', '特記事項']
-            elif s == 'FR60PR' or s == 'R60PR':
+                cols += ['ARMIX', 'ARMIX\nチーム名', '特記事項'] # 2024春チーム名の欄追加
+            elif s == 'ARPR':
+                cols += ['ARPR', '特記事項']
+            elif s == 'RPRM' or s == 'RPRW' or s=='ARM' or s=='ARW' or s=='R3PM' or s=='R3PW':
                 cols += [s, s + '\n希望日', '特記事項']
             else:
                 cols += [s, '特記事項']
             s_list = shashu_list[cols].dropna(subset=[s])
-            s_name = s_list['姓'].map(str) + " " + s_list['名'].map(str)
+            s_name = s_list['氏'].map(str) + " " + s_list['名'].map(str)
             s_list['氏名'] = s_name
             s_list.reset_index(inplace=True)
             s_list.to_excel(writer, sheet_name=s)
