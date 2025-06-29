@@ -31,7 +31,7 @@ if __name__ == "__main__":
     for file in datalist:
         print(file)
         shashu_data = pd.read_excel(
-            file, sheet_name="エントリー", skiprows=2, dtype="object"
+            file, sheet_name="申込フォーム", skiprows=2, dtype="object"
         )
         # 氏名空白の行は削除
         # Tip: dropメソッドは元データを改変しないので、inplace = Trueか以下が必要
@@ -40,16 +40,18 @@ if __name__ == "__main__":
         shashu_data = shashu_data.drop(0)
         # 氏名の氏の部分が空白の場合、エントリーではないと判断
         # ? これでいいか？
-        shashu_data = shashu_data.dropna(subset=["氏"])
+        shashu_data = shashu_data.dropna(subset=["姓"])
         # "番号"も必要ないので削除
         del shashu_data["番号"]
+        print(shashu_data)
 
         # TODO: 日ラIDの修正、はいまはやってない
         # shashu_data = shashu_data['日ラID'].replace('-', '')
         # shashu_data = shashu_data['日ラID'].replace(' ', '')
         # shashu_data = shashu_data['日ラID'].replace('_', '')
-        # チーム名を最初の射手のチーム名[0, ７]から取得
-        team_name = shashu_data.iloc[0, 7]
+        # チーム名を最初の射手のチーム名[0, 8]から取得
+        team_name = shashu_data.iloc[0, 8]
+        print(team_name)
         # チーム名を入力していない場合、エラーを出して終了
         print("チーム名: ", team_name)
         if team_name == "":
@@ -64,17 +66,19 @@ if __name__ == "__main__":
         # INFO: 種目のセルは、年度によって違う
         # 団体登録料のチェック。種目が変わると位置ずれる
         team_data = pd.read_excel(
-            file, sheet_name="エントリー", skiprows=2, usecols=[1, 9, 10]
+            file, sheet_name="申込フォーム", skiprows=2, usecols=[1, 9, 10,12,14,16,18,20]
         )
-
+        print(team_data)
         # 入力例の部分を消去
         team_data = team_data.drop(0)
-        team_data = team_data.dropna(subset=["氏"])
+        team_data = team_data.dropna(subset=["姓"])
         team_data["チーム名"] = team_name
 
         # 出力用に、チーム名を最初にもってくる
         team_num = 0  # 団体数を数えていく
-        team_data = team_data.iloc[:, [1, 2, 3]]
+        # team_data = team_data.iloc[:, [1, 2, 3]] # ! これなんだっけ？
+        print(team_data)
+        
         for data in team_data.itertuples():
             pass
         ## ! 一時的に

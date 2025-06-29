@@ -40,7 +40,7 @@ shumoku_50m = [
 
 # shumoku_team = shumoku_10m + shumoku_50m # 総合団体に使う種目 ! 藤枝用
 # shumoku = shumoku_team + ['ARMIX'] # 上+ARMIX or AR60PR
-shumoku_team = ['FR3X20', 'FR60PR']
+shumoku_team = ['ARM', 'ARW', 'R3PM', 'R3PW', 'RPRM', 'RPRW']
 
 shumoku_10m = [ # ? これなに？
     'AR60PR団体',
@@ -88,11 +88,13 @@ dantai_list = [
 # }
 
 price = {
-    'FR3X20': 11500,
-    'FR60PR': 10500,
-    'FR20PR': 8500,
-    'FR40PRスコープ': 8500,
-    '団体登録': 0
+    'R3PM': 7500,
+    'RPRM': 7500,
+    'R3PW': 7500,
+    'RPRW': 7500,
+    'ARM': 3500,
+    'ARW': 3500,
+    '団体登録': 6000
 }
 
 
@@ -112,8 +114,7 @@ def sankahi_calc(shashu: pd.DataFrame, team: pd.DataFrame):
     ryokin : pandas.Series
         チームの料金
     """
-    print(shashu)
-    print(team)
+
     team_name = team['チーム名']
 
     ryoukin = pd.DataFrame()
@@ -121,7 +122,7 @@ def sankahi_calc(shashu: pd.DataFrame, team: pd.DataFrame):
     print(team_name)
 
     # 個人エントリーと団体エントリーそれぞれの人数をカウントして計算
-    for s in ['FR3X20', 'FR60PR', 'FR20PR', 'FR40PRスコープ' ]: # 大口径変更202409
+    for s in ['R3PM', 'RPRM', 'R3PW', 'RPRW', 'ARM', 'ARW' ]: # 大口径変更202409
         kojin = shashu[s] == '個人'
         dantai = shashu[s] == '団体'
         # それぞれの人数に競技ごとの個人エントリーフィーを掛ける
@@ -229,13 +230,14 @@ def shumoku_shashu_list(shashu_list: pd.DataFrame, output="../output/"):
 
     # Pandas のwriterを使って、種目別にシートを作成する
     with pd.ExcelWriter(output + '種目別射手リスト.xlsx') as writer:
-        for s in ['FR3X20', "FR60PR", 'FR20PR', 'FR40PRスコープ']:
-            cols = ['氏', '名', 'ふりがな', 'チーム名']
+        for s in ['R3PM', 'RPRM', 'R3PW', 'RPRW', 'ARM', 'ARW']: #, 'ARMIX']:
+            print(s)
+            cols = ['姓', '名', 'ふりがな', 'チーム名']
             # SBPR以外の実施日は１つなので、希望日はなし
             # ! 2022ほぼすべての種目で希望日あり
             # ! 2022秋。そうでもない
             if s == 'ARMIX':
-                cols += ['ARMIX', 'ARMIX\nチーム名', '特記事項'] # 2024春チーム名の欄追加
+                cols += ['ARMIXチーム名', '特記事項'] # 2024春チーム名の欄追加
             elif s == 'ARPR':
                 cols += ['ARPR', '特記事項']
             elif s == 'RPRM' or s == 'RPRW' or s=='ARM' or s=='ARW' or s=='R3PM' or s=='R3PW':
@@ -243,7 +245,7 @@ def shumoku_shashu_list(shashu_list: pd.DataFrame, output="../output/"):
             else:
                 cols += [s, '特記事項']
             s_list = shashu_list[cols].dropna(subset=[s])
-            s_name = s_list['氏'].map(str) + " " + s_list['名'].map(str)
+            s_name = s_list['姓'].map(str) + " " + s_list['名'].map(str)
             s_list['氏名'] = s_name
             s_list.reset_index(inplace=True)
             s_list.to_excel(writer, sheet_name=s)
