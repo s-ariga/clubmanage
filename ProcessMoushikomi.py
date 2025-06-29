@@ -66,7 +66,7 @@ if __name__ == "__main__":
         # INFO: 種目のセルは、年度によって違う
         # 団体登録料のチェック。種目が変わると位置ずれる
         team_data = pd.read_excel(
-            file, sheet_name="申込フォーム", skiprows=2, usecols=[1, 9, 10,12,14,16,18,20]
+            file, sheet_name="申込フォーム", skiprows=2, usecols=[1, 9, 10,12,14,16,18,20,22,23]
         )
         print(team_data)
         # 入力例の部分を消去

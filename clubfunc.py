@@ -230,7 +230,7 @@ def shumoku_shashu_list(shashu_list: pd.DataFrame, output="../output/"):
 
     # Pandas のwriterを使って、種目別にシートを作成する
     with pd.ExcelWriter(output + '種目別射手リスト.xlsx') as writer:
-        for s in ['R3PM', 'RPRM', 'R3PW', 'RPRW', 'ARM', 'ARW']: #, 'ARMIX']:
+        for s in ['R3PM', 'RPRM', 'R3PW', 'RPRW', 'ARM', 'ARW', 'ARP60']: #, 'ARMIX']:
             print(s)
             cols = ['姓', '名', 'ふりがな', 'チーム名']
             # SBPR以外の実施日は１つなので、希望日はなし
@@ -238,8 +238,8 @@ def shumoku_shashu_list(shashu_list: pd.DataFrame, output="../output/"):
             # ! 2022秋。そうでもない
             if s == 'ARMIX':
                 cols += ['ARMIXチーム名', '特記事項'] # 2024春チーム名の欄追加
-            elif s == 'ARPR':
-                cols += ['ARPR', '特記事項']
+            elif s == 'ARP60':
+                cols += ['ARP60', '特記事項']
             elif s == 'RPRM' or s == 'RPRW' or s=='ARM' or s=='ARW' or s=='R3PM' or s=='R3PW':
                 cols += [s, s + '\n希望日', '特記事項']
             else:

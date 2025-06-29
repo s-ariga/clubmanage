@@ -6,7 +6,7 @@
 # 射手一覧リストから、団体選手名を抜き出す
 
 import pandas as pd
-import clubfunc as cf
+# import clubfunc as cf
 
 DATA_DIR = "../output/"
 DATA_FILE = "全射手一覧.xlsx"
